@@ -8,6 +8,6 @@ You have to set three parameters input to run this program, for example:
   - Finadl Boundary = 3
   - Data length = 100
  
- In example, function of f(x) = x^2+2x+1 is used to find the root. As we know, from these function, the root is -1. 
+ In example, function of f(x) = x^2+2x+1 is used to find the root. As we know, from these function, the root is -1. You can input whatever boundary values are, because the program has been written to find the root automatically.
  # Contact
  For more information, email: auliakhalqillah.mail@gmail.com
