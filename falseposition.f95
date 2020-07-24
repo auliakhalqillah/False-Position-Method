@@ -4,67 +4,77 @@
 ! gfortran -o falseposition falseposition.o
 !
 ! The program is open source and can use to numeric study purpose.
-! The program was build by Aulia Khalqillah,S.Si
+! The program was build by Aulia Khalqillah,S.Si.,M.Si
 !
 ! email: auliakhalqillah.mail@gmail.com
 ! ==============================================================================
-
-PROGRAM FALSEPOINT
-IMPLICIT NONE
-
-REAL :: XF,XI,XR,XO,F,ER,INF
-INTEGER :: ITER,N
-CHARACTER(LEN=100) :: FMT
-
-WRITE(*,*) ""
-WRITE(*,*)"------------------------------------"
-WRITE(*,*)"FALSE POSITION METHOD - FINDING ROOT"
-WRITE(*,*)"------------------------------------"
-WRITE(*,*) ""
-WRITE(*,"(a)",ADVANCE='NO') "INSERT INITIAL BOUNDARY (XI):"
-READ *, XI
-WRITE(*,"(a)",ADVANCE='NO') "INSERT FINAL BOUNDARY (XF):"
-READ *, XF
-WRITE(*,"(a)",ADVANCE='NO') "INSERT DATA LENGTH (N:100):"
-READ *, N
-
-INF = HUGE(1000.0)
-FMT = "(a12,a13,a13,a20)"
-WRITE(*,*)""
-WRITE(*,FMT)"ITER","XR[ROOT]","F(XR)","ERROR(%)"
-OPEN(10,FILE="falseposition.txt",STATUS="REPLACE")
-50 ITER = 1
-	XO = 0.0
-	DO WHILE (ITER .LE. N)
-		XR = XF - ((F(XF)*(XI-XF))/(F(XI)-F(XF)))
-
-		IF (F(XR) .EQ. 0) THEN
-			ER = ABS((XR-XR)/XR)*100
-			WRITE(*,*) ITER,XR,F(XR),ER
-		ELSEIF ((XR .NE. XR) .OR. (XR .GT. INF)) THEN
-			! Estimate new final boundary
-			XF = XF - 1
-			GO TO 50
-		ELSEIF ((F(XI)*F(XR)) .LE. 0) THEN
-			XF = XR
-		ELSE
-			XI = XR
-		END IF
-
-		ER = ABS((XR-XO)/XR)*100
-		IF (ER .GT. 0.001) THEN
-			WRITE(*,*) ITER,XR,F(XR),ER
-			WRITE(10,*) ITER,XR,F(XR),ER
-			ITER=ITER+1
-			XO=XR
-		END IF
-	END DO
-	CLOSE(10)
-END PROGRAM
-
-REAL FUNCTION F(X)
-IMPLICIT NONE
-REAL :: X
-! F = (X**10)-1
-F = (X**2)+(2*X)+1
-END FUNCTION
+program bisection_method
+    implicit none
+    real :: xi,xf,xr,er,xrold,f,check,limrange,limit
+    integer :: iter, condition
+    character(len=100) :: fmt
+    
+    write(*,*)""
+    write(*,*)"---------------------------------"
+    write(*,*)"BISECTION METHOD - FINDING ROOT"
+    write(*,*)"---------------------------------"
+    write(*,*) ""
+    write(*,"(a)",advance="no") "Insert Initial Boundary (XI):"
+    read*, xi
+    write(*,"(a)",advance="no") "Insert Final Boundary (XF):"
+    read*, xf
+    
+    fmt = "(a12,a13,a13,a20,a13,a17,a20,a17,a17,a20)"
+    write(*,*)""
+    
+    limrange = 1e12
+    limit = 1e-10
+    open(20, file='falsepoint.txt', status='replace')
+        iter = 1
+        xrold = 0
+        xr = xf - ((f(xf)*(xf-xi))/(f(xf)-f(xi)))
+        er = abs((xr-xrold)/xrold)
+        write(*,fmt)"ITER","Xi","Xf","F(Xi)","F(Xf)","XROLD","XR[ROOT]","F(XR)","ERROR","CONDITION"
+        do while (er > limit .or. isnan(er))      
+            if ((f(xi)*f(xr)) < 0) then
+                xf = xr
+                xrold = xr
+                xr = xf - ((f(xf)*(xf-xi))/(f(xf)-f(xi)))
+                er = abs((xr-xrold)/xrold)
+                condition = 1
+            elseif ((f(xi)*f(xr)) > 0) then
+                xi = xr
+                xrold = xr
+                xr = xf - ((f(xf)*(xf-xi))/(f(xf)-f(xi)))
+                er = abs((xr-xrold)/xrold)
+                condition = 2
+            elseif (f(xi)*f(xr) == 0) then
+                xr = xr
+    
+                if (f(xr) == 0) then
+                    xr = xr
+                else
+                    xr = xi
+                endif
+                
+                xrold = xr
+                er = abs((xr-xrold)/xrold)
+                condition = 3
+            end if
+    
+            write(*,*) iter,xi,xf,f(xi),f(xf),xrold,xr,f(xr),er,condition
+            write(20,*) iter,xi,xf,f(xi),f(xf),xrold,xr,f(xr),er,condition
+    
+            iter = iter + 1
+        end do
+    close(20)
+    end program
+      
+    function f(x)
+    implicit none
+    real::x,f
+    ! f = (x**2)-16
+    f = (x**2)-(2*x)+1
+    ! f = (x**3) - (x**2) - (10*x) + 2
+    end
+      
