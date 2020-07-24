@@ -1,41 +1,24 @@
 % This file is used to plot result from falseposition.f95
 %
-% Created by: Aulia Khalqillah,S.Si(2019)
+% Created by: Aulia Khalqillah,S.Si.M.Si(2020)
 %
 % Load data
-data = load('falseposition.txt');
-index = data(:,1);
-root = data(:,2);
-froot = data(:,3);
-error = data(:,4);
-
-% Fucntion of x^2 + 2x + 1
+clear;clc;
 xi = -3;
 xf = 3;
-N = 100;
-h = (xf-xi)/N;
-x = xi:h:xf-h;
-f = (x.^2)+(2*x)+1;
-
-% Plot Function
-subplot(311)
-plot(x,f)
-hold on
-plot([root(end) root(end)], [froot(end) froot(end)],'.r','markersize',30.)
-xlabel('X')
-ylabel('F(X)')
-title('Original Funtion')
-
-% Plot root
-subplot(312)
-plot(index,root)
-xlabel('Index')
-ylabel('Root')
-title('Result of Root')
-
-% Plot error of root
-subplot(313)
-plot(index,error)
-xlabel('Index')
-ylabel('Error (%)')
-title('Percent of error')
+n = 100;
+% root from false position method
+root = 1.00042284;
+deltax = (xf-xi)/n;
+xaxis = [xi:deltax:xf];
+f = (xaxis.^2)-(2*xaxis)+1;
+froot = (root^2)-(2*root)+1;
+plot(xaxis,f)
+hold on;
+plot([root root],[froot froot],'.r','markersize',10)
+xlabel('x')
+ylabel('f(x)')
+title('Finding Root-False Position')
+text(-2.5,12,'f = x^2-2*x+1', 'fontsize', 20)
+grid minor
+print -dpng some_name.png;
