@@ -23,7 +23,7 @@ where `x0` is the initial expected root.
 # Example
 Given a function  of f(x) = x2-2x+1. By using bisection method to solve this equation, set the initial boundary xi = -3, final boundary xf = 3, limit range = 1e12, and limit of error = 1e-10. After 4596 times iteration, we get the root of this function is 1.00042284 (precision in Fortran 95) where the f(1.00042284) = 1.19209290E-07 (close to 0). 
 
-By using this method, if you set the two initial roots aproximation are not in range of expected root (e.g xi = 3 and xf 5), it will solve automatically without re-input the two initial roots approximation again.
+By using this method, if you set the two initial roots approximation are not in range of expected root (e.g xi = 3 and xf 5), it will solve automatically without re-input the two initial roots approximation again.
 # Contact
 Email: auliakhalqillah.mail@gmail.com
  # Material Source
