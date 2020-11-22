@@ -10,13 +10,14 @@
 ! ==============================================================================
 program bisection_method
     implicit none
-    real :: xi,xf,xr,er,xrold,f,check,limrange,limit
+    real :: xi,xf,xr,error,xrold,f,limitrange,limiterror
+    real :: start,finish
     integer :: iter, condition
     character(len=100) :: fmt
     
     write(*,*)""
     write(*,*)"---------------------------------"
-    write(*,*)"BISECTION METHOD - FINDING ROOT"
+    write(*,*)"FALSE POSITION - FINDING ROOT"
     write(*,*)"---------------------------------"
     write(*,*) ""
     write(*,"(a)",advance="no") "Insert Initial Boundary (XI):"
@@ -27,47 +28,52 @@ program bisection_method
     fmt = "(a12,a13,a13,a20,a13,a17,a20,a17,a17,a20)"
     write(*,*)""
     
-    limrange = 1e12
-    limit = 1e-10
+    ! Start root calculation
+    call cpu_time(start)
+    limitrange = 1e12
+    limiterror = 1e-10
     open(20, file='falsepoint.txt', status='replace')
         iter = 1
-        xrold = 0
+        xrold = xi
+        ! Calculate the root by using false position method (secant method approximation)
         xr = xf - ((f(xf)*(xf-xi))/(f(xf)-f(xi)))
-        er = abs((xr-xrold)/xrold)
+        error = abs((xr-xrold)/xrold)
         write(*,fmt)"ITER","Xi","Xf","F(Xi)","F(Xf)","XROLD","XR[ROOT]","F(XR)","ERROR","CONDITION"
-        do while (er > limit .or. isnan(er))      
+        do while (error > limiterror .or. isnan(error))
+            ! write the result on terminal and save to the file
+            write(*,*) iter,xi,xf,f(xi),f(xf),xrold,xr,f(xr),error,condition
+            write(20,*) iter,xi,xf,f(xi),f(xf),xrold,xr,f(xr),error,condition  
+            ! Check first condition by using bisection approximation   
             if ((f(xi)*f(xr)) < 0) then
                 xf = xr
                 xrold = xr
                 xr = xf - ((f(xf)*(xf-xi))/(f(xf)-f(xi)))
-                er = abs((xr-xrold)/xrold)
+                error = abs((xr-xrold)/xrold)
                 condition = 1
+            ! Check second condition by using bisection approximation   
             elseif ((f(xi)*f(xr)) > 0) then
                 xi = xr
                 xrold = xr
                 xr = xf - ((f(xf)*(xf-xi))/(f(xf)-f(xi)))
-                er = abs((xr-xrold)/xrold)
+                error = abs((xr-xrold)/xrold)
                 condition = 2
+            ! Check third condition by using bisection approximation                   
             elseif (f(xi)*f(xr) == 0) then
                 xr = xr
-    
                 if (f(xr) == 0) then
                     xr = xr
                 else
                     xr = xi
                 endif
-                
                 xrold = xr
-                er = abs((xr-xrold)/xrold)
+                error = abs((xr-xrold)/xrold)
                 condition = 3
             end if
-    
-            write(*,*) iter,xi,xf,f(xi),f(xf),xrold,xr,f(xr),er,condition
-            write(20,*) iter,xi,xf,f(xi),f(xf),xrold,xr,f(xr),er,condition
-    
             iter = iter + 1
         end do
     close(20)
+    call cpu_time(finish)
+    print '("Time = ",f6.3," seconds.")',finish-start
     end program
       
     function f(x)
