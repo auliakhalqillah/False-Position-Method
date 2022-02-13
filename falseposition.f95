@@ -1,4 +1,3 @@
-
 ! HOW TO COMPILE THROUGH COMMAND LINE (CMD OR TERMINAL)
 ! gfortran -c falseposition.f95
 ! gfortran -o falseposition falseposition.o
@@ -10,7 +9,7 @@
 ! ==============================================================================
 program bisection_method
     implicit none
-    real :: xi,xf,xr,error,xrold,f,limitrange,limiterror
+    real :: xi,xf,xr,error,xrold,f,limiterror
     real :: start,finish
     integer :: iter, condition
     character(len=100) :: fmt
@@ -30,14 +29,14 @@ program bisection_method
     
     ! Start root calculation
     call cpu_time(start)
-    limitrange = 1e12
-    limiterror = 1e-10
+    limiterror = 1e-20
     open(20, file='falsepoint.txt', status='replace')
         iter = 1
         xrold = xi
         ! Calculate the root by using false position method (secant method approximation)
         xr = xf - ((f(xf)*(xf-xi))/(f(xf)-f(xi)))
-        error = abs((xr-xrold)/xrold)
+        error = abs((xr-xrold)/xr) * 100
+        condition = 0
         write(*,fmt)"ITER","Xi","Xf","F(Xi)","F(Xf)","XROLD","XR[ROOT]","F(XR)","ERROR","CONDITION"
         do while (error > limiterror .or. isnan(error))
             ! write the result on terminal and save to the file
@@ -48,14 +47,14 @@ program bisection_method
                 xf = xr
                 xrold = xr
                 xr = xf - ((f(xf)*(xf-xi))/(f(xf)-f(xi)))
-                error = abs((xr-xrold)/xrold)
+                error = abs((xr-xrold)/xr) * 100
                 condition = 1
             ! Check second condition by using bisection approximation   
             elseif ((f(xi)*f(xr)) > 0) then
                 xi = xr
                 xrold = xr
                 xr = xf - ((f(xf)*(xf-xi))/(f(xf)-f(xi)))
-                error = abs((xr-xrold)/xrold)
+                error = abs((xr-xrold)/xr) * 100
                 condition = 2
             ! Check third condition by using bisection approximation                   
             elseif (f(xi)*f(xr) == 0) then
@@ -66,14 +65,14 @@ program bisection_method
                     xr = xi
                 endif
                 xrold = xr
-                error = abs((xr-xrold)/xrold)
+                error = abs((xr-xrold)/xr) * 100
                 condition = 3
             end if
             iter = iter + 1
         end do
     close(20)
     call cpu_time(finish)
-    print '("Time = ",f6.3," seconds.")',finish-start
+    print '("Time = ",f12.8," seconds.")',finish-start
     end program
       
     function f(x)
