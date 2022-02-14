@@ -47,14 +47,22 @@ program bisection_method
                 xf = xr
                 xrold = xr
                 xr = xf - ((f(xf)*(xf-xi))/(f(xf)-f(xi)))
-                error = abs((xr-xrold)/xr) * 100
+                if (xr == 0) then 
+                    error = 100
+                else
+                    error = abs((xr-xrold)/xr) * 100
+                end if
                 condition = 1
             ! Check second condition by using bisection approximation   
             elseif ((f(xi)*f(xr)) > 0) then
                 xi = xr
                 xrold = xr
                 xr = xf - ((f(xf)*(xf-xi))/(f(xf)-f(xi)))
-                error = abs((xr-xrold)/xr) * 100
+                if (xr == 0) then 
+                    error = 100
+                else
+                    error = abs((xr-xrold)/xr) * 100
+                end if
                 condition = 2
             ! Check third condition by using bisection approximation                   
             elseif (f(xi)*f(xr) == 0) then
@@ -65,7 +73,11 @@ program bisection_method
                     xr = xi
                 endif
                 xrold = xr
-                error = abs((xr-xrold)/xr) * 100
+                if (xr == 0) then 
+                    error = 100
+                else
+                    error = abs((xr-xrold)/xr) * 100
+                end if
                 condition = 3
             end if
             iter = iter + 1
