@@ -21,10 +21,10 @@ for finding root of a function. The false position is required two initial root 
 
 where `x0` is the initial expected root.
 # Example
-Given a function  of f(x) = x2-2x+1. By using bisection method to solve this equation, set the initial boundary xi = -3, final boundary xf = 3, and limit of error = 1e-20. After 5431 times iteration, we get the root of this function is 1.00034523 (precision in Fortran 95) where the f(1.00034523) = 1.19183824E-07 (close to 0). 
+Given a function  of f(x) = x^2-2x+1. By using bisection method to solve this equation, set the initial boundary xi = -3, final boundary xf = 3, and limit of error = 1e-20. After 5431 times iteration, we get the root of this function is 1.00034523 (precision in Fortran 95) where the f(1.00034523) = 1.19183824E-07 (close to 0). 
 
 By using this method, if you set the two initial roots approximation are not in range of expected root (e.g xi = 3 and xf 5), it will solve automatically without re-input the two initial roots approximation again.
 # Contact
 Email: auliakhalqillah.mail@gmail.com
- # Material Source
+ # Reference
 [Julan Hernadi(2012),Matematika Numerik dengan Implementasi Matlab](http://andipublisher.com/produk-1012004497-matematika-numerik-dengan-implementasi-m.html)
